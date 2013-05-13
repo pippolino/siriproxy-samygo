@@ -2,20 +2,37 @@ require 'cora'
 require 'siri_objects'
 require 'pp'
 require 'samygo'
+require 'rpilibcec'
 
 class SiriProxy::Plugin::SamyGo < SiriProxy::Plugin
 
-  def initialize(config = {})
+  def initialize(config)
     #if you have custom configuration options, process them here!
     @remote = SiriSamyGo::RemoteControl.new(config["url"], config["portRest"], config["portSoap"])
     puts "[SamyGO - Initialization] url: #{@remote.url}, portRest: #{@remote.portRest}, portSoap: #{@remote.portSoap}"
+    @cec = RpiLibCec::LibCec.new()
   end
 
   def sendKey(key)
     if (@remote.sendKey(key) >= 0)
       say 'Fatto!'
     else
-      say 'Errore!'
+      if(@cec.status_tv() == 0)
+        if(key == '2')
+          say 'La tv è già spenta, cosa stai cercando di fare?'
+        else
+          response = ask 'La tv è spenta, vuoi accenderla?' #ask the user for something
+
+          if(response =~ /sì|si|yes/i) #process their response
+            say 'Bene!'
+            @cec.turnOn_tv()
+          else
+            say 'E allora cosa vuoi fare ...'
+          end
+        end
+      else
+        say 'Errore!'
+      end
     end
   end
 
@@ -25,7 +42,7 @@ class SiriProxy::Plugin::SamyGo < SiriProxy::Plugin
   end
 
   listen_for /stato tv/i do
-    if %x(echo "pow 0000" | cec-client -d 1 -s "standby 0" RPI).include? 'power status: standby'
+    if @cec.status_tv() == 0
       say 'TV spenta!'
     else
       say 'TV accesa!'
@@ -34,8 +51,7 @@ class SiriProxy::Plugin::SamyGo < SiriProxy::Plugin
   end
 
   listen_for /accendi tv/i do
-    #if %x(echo "on 0" | cec-client -d 1 -s).include? 'opening a connection to the CEC adapter'
-    if %x(echo "on 0000" | cec-client -d 1 -s "standby 0" RPI).include? 'opening a connection to the CEC adapter'
+    if @cec.turnOn_tv() == 0
       say 'Buona Visione!'
     else
       say 'Alzati e cammina!'
@@ -79,12 +95,12 @@ class SiriProxy::Plugin::SamyGo < SiriProxy::Plugin
     request_completed
   end
 
-  listen_for /passa a Apple TV/i do
+  listen_for /passa (?:a )?apple tv/i do
     sendKey('190')
     request_completed
   end
 
-  listen_for /passa a sky/i do
+  listen_for /passa (?:a )?sky/i do
     sendKey('233')
     request_completed
   end
