@@ -8,8 +8,8 @@ class SiriProxy::Plugin::SamyGo < SiriProxy::Plugin
 
   def initialize(config)
     #if you have custom configuration options, process them here!
-    @remote = SiriSamyGo::RemoteControl.new(config["url"], config["portRest"], config["portSoap"])
-    puts "[SamyGO - Initialization] url: #{@remote.url}, portRest: #{@remote.portRest}, portSoap: #{@remote.portSoap}"
+    @remote = SiriSamyGo::RemoteControl.new(config['host'], config['portRest'], config['portSoap'])
+    puts "[Info - SamyGO] url: #{@remote.host}, portRest: #{@remote.portRest}, portSoap: #{@remote.portSoap}"
     @cec = RpiLibCec::LibCec.new()
   end
 

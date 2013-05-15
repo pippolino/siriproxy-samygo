@@ -3,18 +3,18 @@ require 'rexml/document'
 
 module SiriSamyGo
 	class RemoteControl
-		attr_accessor :url
+		attr_accessor :host
 		attr_accessor :portRest
 		attr_accessor :portSoap
 
-		def initialize(url, portRest=2345, portSoap=52235)
-			self.url = url
+		def initialize(host, portRest=2345, portSoap=52235)
+			self.host = host
 			self.portRest = portRest
 			self.portSoap = portSoap
 		end
 
 		def sendKey(key)
-			sock = TCPSocket.new(url, portRest)
+			sock = TCPSocket.new(host, portRest)
 			sock.puts key
 			sock.close
 			return 0
@@ -61,13 +61,13 @@ module SiriSamyGo
 		private
 
 		def executeSoap(action, soapMessage)
-			http = Net::HTTP.new(url, portSoap)
+			http = Net::HTTP.new(host, portSoap)
 			request = Net::HTTP::Post.new("/upnp/control/RenderingControl1")
 			request.add_field('POST', '/upnp/control/RenderingControl1 HTTP/1.0')
 			request.add_field('Content-Type', 'text/xml; charset="utf-8"')
 			request.add_field('SOAPACTION', '"SoapAction:urn:schemas-upnp-org:service:RenderingControl:1#'+action+'"')
 			request.add_field('Cache-Control', 'no-cache')
-			request.add_field('Host', url+':'+portSoap.to_s())
+			request.add_field('Host', host+':'+portSoap.to_s())
 			request.add_field('Content-length', soapMessage.length.to_s())
 			request.add_field('Connection', 'Close')
 			request.body = soapMessage
