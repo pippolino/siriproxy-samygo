@@ -1,5 +1,6 @@
 require 'socket'
 require 'rexml/document'
+require 'net/http'
 
 module SiriSamyGo
 	class RemoteControl
