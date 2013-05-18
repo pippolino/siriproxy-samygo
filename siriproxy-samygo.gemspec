@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
+  s.add_runtime_dependency "siriproxy", ">= 0.5.4"
   s.add_runtime_dependency "socket"
   s.add_runtime_dependency "rexml/document"
   s.add_runtime_dependency "net/http"
