@@ -4,7 +4,7 @@ $:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
   s.name        = "siriproxy-samygo"
   s.version     = "0.0.3" 
-  s.authors     = ["pippolino"]
+  s.authors     = ["Federico Soldani"]
   s.email       = ["pippo@daemon-ware.com"]
   s.homepage    = "http://www.daemon-ware.com"
   s.summary     = %q{Remote TV controller for SamyGo}
@@ -15,11 +15,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/* 2> /dev/null`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_development_dependency "rake"
+
   s.add_runtime_dependency "siriproxy", ">= 0.5.4"
-  s.add_runtime_dependency "socket"
-  s.add_runtime_dependency "rexml/document"
-  s.add_runtime_dependency "net/http"
 end
