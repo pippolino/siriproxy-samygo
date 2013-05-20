@@ -4,7 +4,7 @@ $:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
   s.name        = "siriproxy-samygo"
   s.version     = "0.0.3" 
-  s.authors     = ["Federico Soldani"]
+  s.authors     = ["pippolino"]
   s.email       = ["pippo@daemon-ware.com"]
   s.homepage    = "http://www.daemon-ware.com"
   s.summary     = %q{Remote TV controller for SamyGo}
